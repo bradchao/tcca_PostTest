@@ -8,6 +8,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
+import java.io.BufferedWriter;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -47,12 +50,21 @@ public class MainActivity extends AppCompatActivity {
             conn.setDoOutput(true);
 
             ContentValues values = new ContentValues();
-            values.put("cname", "brad");
+            values.put("cname", "brad java android");
             values.put("tel", "33333");
             values.put("addr", "abcdefg");
             String query = queryString(values);
             Log.v("brad", query);
 
+            OutputStream out =  conn.getOutputStream();
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out,"UTF-8"));
+            writer.write(query);
+            writer.flush();
+            out.close();
+
+            conn.connect();
+
+            
 
 
         }catch (Exception e){
