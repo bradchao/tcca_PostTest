@@ -8,7 +8,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -50,8 +52,8 @@ public class MainActivity extends AppCompatActivity {
             conn.setDoOutput(true);
 
             ContentValues values = new ContentValues();
-            values.put("cname", "brad java android");
-            values.put("tel", "33333");
+            values.put("cname", "brad123");
+            values.put("tel", "9487945123");
             values.put("addr", "abcdefg");
             String query = queryString(values);
             Log.v("brad", query);
@@ -64,7 +66,18 @@ public class MainActivity extends AppCompatActivity {
 
             conn.connect();
 
-            
+            int rcode = conn.getResponseCode();
+            String rmesg = conn.getResponseMessage();
+            Log.v("brad", rcode + ":" + rmesg);
+
+            if (rcode == 200){
+                BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                String json = reader.readLine();
+                Log.v("brad", "json:" + json);
+            }
+
+
+
 
 
         }catch (Exception e){
