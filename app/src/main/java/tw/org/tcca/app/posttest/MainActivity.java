@@ -101,6 +101,57 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void fetchCust(View view) {
+        new Thread(){
+            @Override
+            public void run() {
+                queryRemote();
+            }
+        }.start();
+    }
+
+    private void queryRemote(){
+        try{
+            URL url = new URL("https://www.bradchao.com/autumn/fetchCust.php");
+            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+            conn.setReadTimeout(3*1000);
+            conn.setConnectTimeout(3*1000);
+            conn.setRequestMethod("POST");
+            conn.setDoInput(true);
+            conn.setDoOutput(true);
+
+            ContentValues values = new ContentValues();
+            values.put("t", "a");
+            String query = queryString(values);
+            Log.v("brad", query);
+
+            OutputStream out =  conn.getOutputStream();
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out,"UTF-8"));
+            writer.write(query);
+            writer.flush();
+            out.close();
+
+            conn.connect();
+
+            int rcode = conn.getResponseCode();
+            String rmesg = conn.getResponseMessage();
+            Log.v("brad", rcode + ":" + rmesg);
+
+            if (rcode == 200){
+                BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                String json = reader.readLine();
+                Log.v("brad", "json:" + json);
+                //parseAddJSON(json);
+            }
+
+        }catch (Exception e){
+
+        }
+    }
+
+    
+
+
     private class UIHandler extends Handler {
         @Override
         public void handleMessage(@NonNull Message msg) {
