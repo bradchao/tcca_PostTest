@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -141,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 String json = reader.readLine();
                 Log.v("brad", "json:" + json);
-                //parseAddJSON(json);
+                parseQueryJSON(json);
             }
 
         }catch (Exception e){
@@ -149,7 +150,22 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    
+    private void parseQueryJSON(String json){
+        try{
+            JSONArray root = new JSONArray(json);
+            for (int i=0; i<root.length(); i++){
+                JSONObject row = root.getJSONObject(i);
+                String cname = row.getString("cname");
+                String tel = row.getString("tel");
+                String addr = row.getString("addr");
+                Log.v("brad", cname + ":" + tel + ":" + addr);
+            }
+
+
+        }catch (Exception e){
+
+        }
+    }
 
 
     private class UIHandler extends Handler {
